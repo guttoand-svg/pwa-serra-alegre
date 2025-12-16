@@ -1,0 +1,20 @@
+{
+  "name": "Fazenda Serra Alegre",
+  "short_name": "Serra Alegre",
+  "start_url": "https://fzserraalegre.blogspot.com/?pwa=1",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2b8a3e",
+  "icons": [
+    {
+      "src": "https://i.imgur.com/SEU_ICONE_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.imgur.com/SEU_ICONE_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
