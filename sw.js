@@ -1,23 +1,44 @@
-const CACHE = "serra-alegre-v1";
+const CACHE_NAME = "serra-alegre-v3";
 
-self.addEventListener("install", e => {
-  e.waitUntil(
-    caches.open(CACHE).then(cache =>
-      cache.addAll([
-        "https://fzserraalegre.blogspot.com/"
-      ])
-    )
+const URLS_TO_CACHE = [
+  "https://fzserraalegre.blogspot.com/",
+  "https://fzserraalegre.blogspot.com/?m=1",
+  "https://fzserraalegre.blogspot.com/p/test_89.html",
+  "https://fzserraalegre.blogspot.com/p/test_89.html?m=1"
+];
+
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(URLS_TO_CACHE);
+    })
   );
+  self.skipWaiting();
 });
 
-self.addEventListener("fetch", e => {
-  e.respondWith(
-    fetch(e.request)
-      .then(res => {
-        const clone = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, clone));
-        return res;
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) return caches.delete(key);
+        })
+      )
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache =>
+          cache.put(event.request, clone)
+        );
+        return response;
       })
-      .catch(() => caches.match(e.request))
+      .catch(() => caches.match(event.request))
   );
 });
